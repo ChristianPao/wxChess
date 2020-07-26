@@ -1,4 +1,0 @@
-https://github.com/ctgk/chess-cpp/blob/master/panel.cpp
-http://zetcode.com/gui/wxwidgets/firstprograms/
-https://www.wxishiko.com/wxWidgetsTutorials/drawing.html
-https://www.informit.com/articles/article.aspx?p=405047

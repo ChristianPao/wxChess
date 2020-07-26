@@ -1,10 +1,12 @@
 #include "ChessPanel.h"
 
-ChessPanel::ChessPanel(wxFrame *parent)
-	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE)
+ChessPanel::ChessPanel(wxFrame *parent, Board *board)
+	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE),
+	board{ board }
 {
 
 	Connect(wxEVT_PAINT, wxPaintEventHandler(ChessPanel::OnPaint));
+	Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(ChessPanel::OnLeftMouseDown));
 }
 
 void ChessPanel::OnPaint(wxPaintEvent& event)
@@ -13,8 +15,39 @@ void ChessPanel::OnPaint(wxPaintEvent& event)
 	// This is where I'm gonna paint board and pieces
 	//wxBufferedPaintDC ?
 	wxPaintDC dc(this);
-	
 	drawBoard(dc);
+	drawPieces(dc);
+}
+
+void ChessPanel::OnLeftMouseDown(wxMouseEvent& event)
+{
+	auto pos = event.GetPosition();
+	const int cellLenX = GetClientSize().GetWidth() / 8;
+	const int cellLenY = GetClientSize().GetHeight() / 8;
+	int x = (int)(pos.x / cellLenX);
+	int y = (int)(pos.y / cellLenY);
+
+	std::string type = board->getSelectedCellType(x, y);
+	if (type == "piece")
+	{
+		auto piece = getSelectedPiece(pos.x, pos.y);
+		piece->illuminatePaths();
+	}
+	else if (type == "illuminated")
+	{
+
+	}
+	else
+	{
+		// Erase illumination
+	}
+}
+
+Piece *ChessPanel::getSelectedPiece(int x, int y)
+{
+	Piece *piece = board->getPieceAtCoords(x, y);
+	_RPT1(0, "%s\n", piece->getId().c_str());
+	return piece;
 }
 
 void ChessPanel::drawBoard(wxPaintDC& dc)
@@ -37,4 +70,19 @@ void ChessPanel::drawBoard(wxPaintDC& dc)
 				dc.SetBrush(wxBrush(black));
 			dc.DrawRectangle(x*cellLenX, y*cellLenY, cellLenX, cellLenY);
 		}
+}
+
+void ChessPanel::drawPieces(wxPaintDC& dc)
+{
+	const int cellLenX = GetClientSize().GetWidth() / 8;
+	const int cellLenY = GetClientSize().GetHeight() / 8;
+	auto piecesMap = board->getPiecesMap();
+	std::string a = "Begin";
+	_RPT1(0, "%s\n", a.c_str());
+	for (auto& it : piecesMap)
+	{
+		Piece *piece = it.second;
+		dc.DrawBitmap(piece->getImage(), piece->getX()*cellLenX+10, piece->getY()*cellLenY);
+	}
+	_RPT1(0, "%s\n", "Stop drawing pieces");
 }

@@ -118,11 +118,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Board.cpp" />
     <ClCompile Include="ChessPanel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ChessFrame.cpp" />
+    <ClCompile Include="Piece.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Board.h" />
     <ClInclude Include="ChessPanel.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="ChessFrame.h" />
