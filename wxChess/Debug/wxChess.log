@@ -1,8 +1,7 @@
 ﻿  Piece.cpp
-  Generating Code...
-  Compiling...
-  ChessPanel.cpp
   ChessFrame.cpp
+  main.cpp
+  ChessPanel.cpp
   Board.cpp
   Generating Code...
   wxChess.vcxproj -> C:\Users\chris\source\repos\wxChess\Debug\wxChess.exe
