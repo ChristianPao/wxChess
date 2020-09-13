@@ -128,10 +128,12 @@
     <ClCompile Include="Piece.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Board.fwd.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="ChessPanel.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="ChessFrame.h" />
+    <ClInclude Include="Piece.fwd.h" />
     <ClInclude Include="Pieces.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

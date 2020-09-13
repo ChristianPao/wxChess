@@ -1,6 +1,8 @@
 #pragma once
 #include <wx/wx.h>
 #include "Board.h"
+#include "Pieces.h"
+#include <wx/graphics.h>
 
 class ChessPanel : public wxPanel
 {
@@ -10,8 +12,8 @@ public:
 private:
 	void OnPaint(wxPaintEvent& event);
 	void OnLeftMouseDown(wxMouseEvent& event);
-	void drawBoard(wxPaintDC& dc);
-	void drawPieces(wxPaintDC& dc);
-	Piece *ChessPanel::getSelectedPiece(int mouseX, int mouseY);
+	void clearBuffer(wxGraphicsContext *gc);
+	void drawBoard(wxGraphicsContext* gc);
+	void drawPieces(wxGraphicsContext* gc);
 	Board *board;
 };
