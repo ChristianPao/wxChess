@@ -5,13 +5,38 @@ Board::Board()
 	:turn{ "white" }
 {
 	initPieces();
-	initMatrix();
-	initIlluminations();
+	initCells();
 }
 
 const std::unordered_map<std::string, Piece*>& Board::getPiecesMap()
 {
 	return pieces;
+}
+
+Piece* Board::getPiece(int cellX, int cellY)
+{
+	// Can return nullptr
+	return cells[cellX][cellY]->getPiece();
+}
+
+Cell* Board::getCell(int cellX, int cellY)
+{
+	return cells[cellX][cellY];
+}
+
+std::string Board::getTurn()
+{
+	return turn;
+}
+
+bool Board::isEnemy(int cellX, int cellY)
+{
+	return cells[cellX][cellY]->getPiece()->getColor() != turn;
+}
+
+bool Board::isTherePiece(int cellX, int cellY)
+{
+	return cells[cellX][cellY]->hasPiece();
 }
 
 void Board::initPieces()
@@ -38,80 +63,56 @@ void Board::initPieces()
 	{
 		for (auto& color : colors)
 		{
+			Piece *piece;
 			std::string imageName = color == "W" ? "white" : "black";
 			switch (ids[x][0])
 			{
 			case 'R':
-				imageName += "_rook.png"; break;
+				imageName += "_rook.png";
+				piece = new Rook(x, color == "W" ? 7 : 0, wxBitmap::wxBitmap(wxImage("images/" + imageName)), color + "_" + ids[x]);
+				break;
 			case 'K':
 				if (ids[x][1] == 'i')
+				{
 					imageName += "_king.png";
+					piece = new King(x, color == "W" ? 7 : 0, wxBitmap::wxBitmap(wxImage("images/" + imageName)), color + "_" + ids[x]);
+				}
 				else
+				{
 					imageName += "_knight.png";
+					piece = new Knight(x, color == "W" ? 7 : 0, wxBitmap::wxBitmap(wxImage("images/" + imageName)), color + "_" + ids[x]);
+				}
 				break;
 			case 'B':
-				imageName += "_bishop.png"; break;
+				imageName += "_bishop.png";
+				piece = new Bishop(x, color == "W" ? 7 : 0, wxBitmap::wxBitmap(wxImage("images/" + imageName)), color + "_" + ids[x]);
+				break;
 			case 'Q':
 				imageName += "_queen.png";
+				piece = new Queen(x, color == "W" ? 7 : 0, wxBitmap::wxBitmap(wxImage("images/" + imageName)), color + "_" + ids[x]);
 			}
 			_RPT1(0, "%s\n", imageName.c_str());
-			wxImage image("images/"+imageName);
-			Piece *pawn = new Pawn(x, color == "W" ? 7 : 0, wxBitmap::wxBitmap(image), color+"_"+ids[x]);
-			pieces[pawn->getId()] = pawn;
+			pieces[piece->getId()] = piece;
 		}
 	}
 
 }
 
-void Board::initMatrix()
+void Board::initCells()
 {
-	std::vector<std::string> empty(8);
+	std::vector<Cell*> empty(8);
 	for (int i = 0; i < 8; i++)
-		matrix.push_back(empty);
+	{
+		cells.push_back(empty);
+		for (int j = 0; j < 8; j++)
+			cells[i][j] = new Cell();
+	}
 	for (auto& it : pieces)
 	{
 		Piece *piece=it.second;
 		int x = piece->getCellX();
 		int y = piece->getCellY();
-		std::string id = piece->getId();
-		matrix[x][y] = id;
+		cells[x][y] = new Cell();
+		cells[x][y]->setPiece(piece);
 	}
-}
-
-void Board::initIlluminations()
-{
-	std::vector<std::string> empty(8);
-	for (int i = 0; i < 8; i++)
-		illuminations.push_back(empty);
-}
-
-std::vector<std::vector<std::string>> Board::getIlluminations()
-{
-	return illuminations;
-}
-
-void Board::setIlluminationOn(int cellX, int cellY)
-{
-	illuminations[cellX][cellY] = "x";
-}
-
-Piece* Board::getPieceAtCoords(int cellX, int cellY)
-{
-	std::string symbol = matrix[cellX][cellY];
-	return pieces[symbol];
-}
-
-std::string Board::getSelectedCellType(int x, int y)
-{
-	std::string symbol = matrix[x][y];
-	if (symbol == "")
-		return "empty";
-	if (symbol == "illuminated")
-		return "illuminated";
-	return "piece";
-}
-
-std::string Board::getMatrixElem(int cellX, int cellY)
-{
-	return matrix[cellX][cellY];
 }

@@ -3,25 +3,27 @@
 #include "Piece.fwd.h"
 #include <wx/wx.h>
 #include <unordered_map>
+#include "Cell.h"
 
 class Board
 {
 public:
 	Board();
-	Piece *getPieceAtCoords(int x, int y);
+	Piece* getPiece(int x, int y);
+	// A piece can exist even though it's not on the board anymore (eaten)
+	// it's also faster when you want to draw them
 	const std::unordered_map<std::string, Piece*>& getPiecesMap();
-	std::string getSelectedCellType(int x, int y);
-	std::vector<std::vector<std::string>> getIlluminations();
-	std::string getMatrixElem(int cellX, int cellY);
+	Cell* getCell(int cellX, int cellY);
 	std::string turn;
-	void setIlluminationOn(int cellX, int cellY);
+	std::string getTurn();
+	bool isEnemy(int cellX, int cellY);
+	bool isTherePiece(int cellX, int cellY);
 
 private:
 	std::unordered_map<std::string, Piece*> pieces;
-	std::vector<std::vector<std::string>> matrix;
-	std::vector<std::vector<std::string>> illuminations;
+	std::vector<std::vector<Cell*>> cells;
 	void initPieces();
-	void initMatrix();
-	void initIlluminations();
+	void initCells();
+	
 	
 };

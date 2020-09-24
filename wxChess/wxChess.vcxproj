@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="ChessPanel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ChessFrame.cpp" />
@@ -130,6 +131,7 @@
   <ItemGroup>
     <ClInclude Include="Board.fwd.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="Cell.h" />
     <ClInclude Include="ChessPanel.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="ChessFrame.h" />

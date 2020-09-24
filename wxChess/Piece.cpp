@@ -46,16 +46,21 @@ void Pawn::illuminatePaths(Board* board)
 	short sign = 1;
 	if (color == "black")
 		sign = -1;
+	if (cellX == 0 && board->isTherePiece(1, cellY - 1 * sign) && board->isEnemy(1, cellY - 1 * sign))
+	{
+		board->getCell(1, cellY - 1 * sign)->turnOn();
+	}
+	// Check if it's the pawn's first move
 	if ((cellY == 6 && color=="white") || (cellY == 1 && color == "black"))
 	{
-		board->setIlluminationOn(cellX, cellY - 1*sign);
-		board->setIlluminationOn(cellX, cellY - 2*sign);
+		board->getCell(cellX, cellY - 1*sign)->turnOn();
+		board->getCell(cellX, cellY - 2*sign)->turnOn();
+		return;
 	}
-	else
-	{
-		for(int y=cellY; board->getMatrixElem(cellX, cellY)=="";y=y-1*sign)
-			board->setIlluminationOn(cellX, y);
-	}
+	if (!board->isTherePiece(cellX, cellY - 1 * sign))
+		board->getCell(cellX, cellY - 1 * sign)->turnOn();
+	
+	
 }
 
 Rook::Rook(int cellX, int cellY, wxBitmap image, std::string id)

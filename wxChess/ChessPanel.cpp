@@ -41,22 +41,27 @@ void ChessPanel::OnLeftMouseDown(wxMouseEvent& event)
 	// Translate pixels coords to cells
 	int cellX = (int)(pos.x / cellLenX);
 	int cellY = (int)(pos.y / cellLenY);
-
-	std::string type = board->getSelectedCellType(cellX, cellY);
-	if (type == "piece")
+	
+	Cell* selectedCell = board->getCell(cellX, cellY);
+	// Check if selectedCell is mover's piece
+	if (selectedCell->hasPiece() && !board->isEnemy(cellX, cellY))
 	{
-		auto piece = board->getPieceAtCoords(cellX, cellY);
+		auto piece = selectedCell->getPiece();
 		_RPT1(0, "%s\n", piece->getId().c_str());
 		piece->illuminatePaths(board);
 		wxPanel::Refresh();
 	}
-	else if (type == "illuminated")
+	else if (selectedCell->isIlluminated())
 	{
-
+		// Move there
+		_RPT1(0, "%s\n", "ciao");
+		// handle enemy eating in Piece::move
 	}
+	// Clicked on empty, non-illuminated cell
 	else
 	{
 		// Erase illumination
+		_RPT1(0, "%s\n", "ciao2");
 	}
 }
 
@@ -84,7 +89,7 @@ void ChessPanel::drawBoard(wxGraphicsContext* gc)
 			gc->DrawRectangle(x*cellLenX, y*cellLenY, cellLenX, cellLenY);
 
 			// Check if cell needs to be illuminated
-			if (board->getIlluminations()[x][y] == "x")
+			if (board->getCell(x, y)->isIlluminated())
 			{
 				gc->SetBrush(wxBrush(yellow));
 				gc->DrawRectangle(x*cellLenX, y*cellLenY, cellLenX, cellLenY);
