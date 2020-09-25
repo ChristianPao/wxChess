@@ -9,19 +9,24 @@ class Board
 {
 public:
 	Board();
-	Piece* getPiece(int x, int y);
+	Piece* getPieceAt(int x, int y);
 	// A piece can exist even though it's not on the board anymore (eaten)
 	// it's also faster when you want to draw them
 	const std::unordered_map<std::string, Piece*>& getPiecesMap();
-	Cell* getCell(int cellX, int cellY);
+	Cell* getCellAt(int cellX, int cellY);
 	std::string turn;
 	std::string getTurn();
-	bool isEnemy(int cellX, int cellY);
+	bool isThereEnemy(int cellX, int cellY);
+	bool isThereAlly(int cellX, int cellY);
 	bool isTherePiece(int cellX, int cellY);
+	Piece* getSelectedPiece();
+	void setSelectedPiece(Piece* piece);
+	void switchTurn();
 
 private:
 	std::unordered_map<std::string, Piece*> pieces;
 	std::vector<std::vector<Cell*>> cells;
+	Piece* selectedPiece;
 	void initPieces();
 	void initCells();
 	

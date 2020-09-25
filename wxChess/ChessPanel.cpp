@@ -42,27 +42,40 @@ void ChessPanel::OnLeftMouseDown(wxMouseEvent& event)
 	int cellX = (int)(pos.x / cellLenX);
 	int cellY = (int)(pos.y / cellLenY);
 	
-	Cell* selectedCell = board->getCell(cellX, cellY);
+	Cell* selectedCell = board->getCellAt(cellX, cellY);
 	// Check if selectedCell is mover's piece
-	if (selectedCell->hasPiece() && !board->isEnemy(cellX, cellY))
+	if (board->isThereAlly(cellX, cellY))
 	{
+		eraseAllIllumination();
 		auto piece = selectedCell->getPiece();
 		_RPT1(0, "%s\n", piece->getId().c_str());
 		piece->illuminatePaths(board);
+		board->setSelectedPiece(piece);
 		wxPanel::Refresh();
 	}
 	else if (selectedCell->isIlluminated())
 	{
 		// Move there
 		_RPT1(0, "%s\n", "ciao");
-		// handle enemy eating in Piece::move
+		board->getSelectedPiece()->move(cellX, cellY, board);
+		eraseAllIllumination();
+		board->setSelectedPiece(nullptr);
+		wxPanel::Refresh();
 	}
 	// Clicked on empty, non-illuminated cell
 	else
 	{
-		// Erase illumination
-		_RPT1(0, "%s\n", "ciao2");
+		eraseAllIllumination();
+		board->setSelectedPiece(nullptr);
+		wxPanel::Refresh();
 	}
+}
+
+void ChessPanel::eraseAllIllumination()
+{
+	for (int x = 0; x < 8; x++)
+		for (int y = 0; y < 8; y++)
+			board->getCellAt(x, y)->turnOff();
 }
 
 void ChessPanel::drawBoard(wxGraphicsContext* gc)
@@ -89,7 +102,7 @@ void ChessPanel::drawBoard(wxGraphicsContext* gc)
 			gc->DrawRectangle(x*cellLenX, y*cellLenY, cellLenX, cellLenY);
 
 			// Check if cell needs to be illuminated
-			if (board->getCell(x, y)->isIlluminated())
+			if (board->getCellAt(x, y)->isIlluminated())
 			{
 				gc->SetBrush(wxBrush(yellow));
 				gc->DrawRectangle(x*cellLenX, y*cellLenY, cellLenX, cellLenY);
@@ -107,7 +120,8 @@ void ChessPanel::drawPieces(wxGraphicsContext* gc)
 	for (auto& it : piecesMap)
 	{
 		Piece *piece = it.second;
-		gc->DrawBitmap(piece->getImage(), piece->getCellX()*cellLenX + 10, piece->getCellY()*cellLenY, piece->getImage().GetWidth(), piece->getImage().GetHeight());
+		if(piece->isAlive())
+			gc->DrawBitmap(piece->getImage(), piece->getCellX()*cellLenX + 10, piece->getCellY()*cellLenY, piece->getImage().GetWidth(), piece->getImage().GetHeight());
 		
 	}
 	_RPT1(0, "%s\n", "Stop drawing pieces");

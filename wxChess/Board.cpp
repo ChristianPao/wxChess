@@ -13,13 +13,23 @@ const std::unordered_map<std::string, Piece*>& Board::getPiecesMap()
 	return pieces;
 }
 
-Piece* Board::getPiece(int cellX, int cellY)
+Piece* Board::getPieceAt(int cellX, int cellY)
 {
 	// Can return nullptr
 	return cells[cellX][cellY]->getPiece();
 }
 
-Cell* Board::getCell(int cellX, int cellY)
+Piece* Board::getSelectedPiece()
+{
+	return selectedPiece;
+}
+
+void Board::setSelectedPiece(Piece* piece)
+{
+	selectedPiece = piece;
+}
+
+Cell* Board::getCellAt(int cellX, int cellY)
 {
 	return cells[cellX][cellY];
 }
@@ -29,9 +39,23 @@ std::string Board::getTurn()
 	return turn;
 }
 
-bool Board::isEnemy(int cellX, int cellY)
+void Board::switchTurn()
 {
-	return cells[cellX][cellY]->getPiece()->getColor() != turn;
+	if (turn == "white")
+		turn = "black";
+	else
+		turn = "white";
+}
+
+bool Board::isThereEnemy(int cellX, int cellY)
+{
+
+	return cells[cellX][cellY]->getPiece() != nullptr && cells[cellX][cellY]->getPiece()->getColor() != turn;
+}
+
+bool Board::isThereAlly(int cellX, int cellY)
+{
+	return cells[cellX][cellY]->getPiece() != nullptr && cells[cellX][cellY]->getPiece()->getColor() == turn;
 }
 
 bool Board::isTherePiece(int cellX, int cellY)

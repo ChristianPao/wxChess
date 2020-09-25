@@ -15,5 +15,6 @@ private:
 	void clearBuffer(wxGraphicsContext *gc);
 	void drawBoard(wxGraphicsContext* gc);
 	void drawPieces(wxGraphicsContext* gc);
+	void eraseAllIllumination();
 	Board *board;
 };

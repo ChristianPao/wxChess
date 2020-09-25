@@ -16,17 +16,21 @@ public:
 	virtual void illuminatePaths(Board* board) = 0;
 	/// X and Y go from 0 to 7
 	int getCellX(), getCellY();
-	void setX(), setY();
+	void setCellX(int x), setCellY(int y);
 	void setId();
 	std::string getId();
 	wxBitmap getImage();
 	std::string getColor();
+	void move(int targetX, int targetY, Board* board);
+	bool isAlive();
+	void setAlive(bool isAlive);
 
 protected:
 	int cellX, cellY;
 	std::string id;
 	wxBitmap image;
 	std::string color;
+	bool alive;
 
 };
 

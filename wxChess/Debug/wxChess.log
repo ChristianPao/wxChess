@@ -1,2 +1,7 @@
-﻿  Board.cpp
+﻿  Piece.cpp
+  Board.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  ChessPanel.cpp
+  ChessFrame.cpp
   wxChess.vcxproj -> C:\Users\chris\source\repos\wxChess\Debug\wxChess.exe
