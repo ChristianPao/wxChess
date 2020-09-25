@@ -1,6 +1,6 @@
 # wxChess
 Simple chess game with wxWidgets.
 
-In construction... For now it draws the board and the pieces. I implemented the logic to select a piece on the board and the illumination of the pawns' paths.
+Almost fully functional. At the moment you can play vs another human with the same computer. I'd like to implement a lazy AI.
 
 <img src="chess.png" width=400>

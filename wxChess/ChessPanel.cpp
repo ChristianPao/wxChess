@@ -15,6 +15,7 @@ void ChessPanel::OnPaint(wxPaintEvent& event)
 {
 	// dc stands for "device context"
 	// This is where I'm gonna paint board and pieces
+
 	// To avoid flicker
 	wxBufferedPaintDC dc(this);
 	wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
