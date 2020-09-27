@@ -22,11 +22,14 @@ public:
 	Piece* getSelectedPiece();
 	void setSelectedPiece(Piece* piece);
 	void switchTurn();
+	void setEnemyIsAI(bool enemyIsAI);
+	void eraseAllIllumination();
 
 private:
 	std::unordered_map<std::string, Piece*> pieces;
 	std::vector<std::vector<Cell*>> cells;
 	Piece* selectedPiece;
+	bool enemyIsAI;
 	void initPieces();
 	void initCells();
 	

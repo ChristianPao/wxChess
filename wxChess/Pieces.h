@@ -14,6 +14,7 @@ public:
 	 * ChessPanel handle the drawing, always.
 	 */
 	virtual void illuminatePaths(Board* board) = 0;
+	virtual bool canMove(Board* board);
 	/// X and Y go from 0 to 7
 	int getCellX(), getCellY();
 	void setCellX(int x), setCellY(int y);

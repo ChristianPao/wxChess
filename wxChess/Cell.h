@@ -11,7 +11,7 @@ public:
 	Piece* getPiece();
 	void setPiece(Piece* piece);
 	bool hasPiece();
-
+	
 
 private:
 	Piece* piece;

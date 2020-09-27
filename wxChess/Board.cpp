@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "Pieces.h"
+#include "AI.h"
 
 Board::Board()
 	:turn{ "white" }
@@ -41,10 +42,23 @@ std::string Board::getTurn()
 
 void Board::switchTurn()
 {
-	if (turn == "white")
-		turn = "black";
-	else
-		turn = "white";
+	turn = turn == "white" ? "black" : "white";
+	if (turn == "black" && enemyIsAI)
+	{
+		AI::playTurn(this);
+	}
+}
+
+void Board::eraseAllIllumination()
+{
+	for (int x = 0; x < 8; x++)
+		for (int y = 0; y < 8; y++)
+			getCellAt(x, y)->turnOff();
+}
+
+void Board::setEnemyIsAI(bool enemyIsAI)
+{
+	this->enemyIsAI = enemyIsAI;
 }
 
 bool Board::isThereEnemy(int cellX, int cellY)
@@ -115,7 +129,7 @@ void Board::initPieces()
 				imageName += "_queen.png";
 				piece = new Queen(x, color == "W" ? 7 : 0, wxBitmap::wxBitmap(wxImage("images/" + imageName)), color + "_" + ids[x]);
 			}
-			_RPT1(0, "%s\n", imageName.c_str());
+			//_RPT1(0, "%s\n", imageName.c_str());
 			pieces[piece->getId()] = piece;
 		}
 	}

@@ -15,6 +15,8 @@ private:
 	void clearBuffer(wxGraphicsContext *gc);
 	void drawBoard(wxGraphicsContext* gc);
 	void drawPieces(wxGraphicsContext* gc);
-	void eraseAllIllumination();
+	void drawSelectionScreen(wxGraphicsContext* gc);
+	void handleScreenSelection(const wxPoint& point);
 	Board *board;
+	bool enemySelected;
 };

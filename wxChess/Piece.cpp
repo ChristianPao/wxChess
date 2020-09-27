@@ -56,6 +56,20 @@ void Piece::setAlive(bool isAlive)
 	alive = isAlive;
 }
 
+bool Piece::canMove(Board* board)
+{
+	illuminatePaths(board);
+	for (int x = 0; x < 8; x++)
+		for (int y = 0; y < 8; y++)
+			if (board->getCellAt(x, y)->isIlluminated())
+			{
+				board->eraseAllIllumination();
+				return true;
+			}
+	board->eraseAllIllumination();
+	return false;
+}
+
 void Piece::move(int targetX, int targetY, Board* board)
 {
 	// We're sure that it's not an ally because it wouldn't be illuminated
@@ -65,7 +79,6 @@ void Piece::move(int targetX, int targetY, Board* board)
 	cellX = targetX;
 	cellY = targetY;
 	board->getCellAt(targetX, targetY)->setPiece(this);
-	board->switchTurn();
 }
 
 Pawn::Pawn(int cellX, int cellY, wxBitmap image, std::string id)

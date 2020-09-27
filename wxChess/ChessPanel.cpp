@@ -3,7 +3,7 @@
 
 ChessPanel::ChessPanel(wxFrame *parent, Board *board)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE),
-	board{ board }
+	board{ board }, enemySelected{ false }
 {
 	wxWindow::SetBackgroundStyle(wxBG_STYLE_PAINT);
 	Connect(wxEVT_PAINT, wxPaintEventHandler(ChessPanel::OnPaint));
@@ -20,9 +20,15 @@ void ChessPanel::OnPaint(wxPaintEvent& event)
 	wxBufferedPaintDC dc(this);
 	wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
 	clearBuffer(gc);
-	drawBoard(gc);
-	drawPieces(gc);
-	
+	if (!enemySelected)
+	{
+		drawSelectionScreen(gc);
+	}
+	else
+	{
+		drawBoard(gc);
+		drawPieces(gc);
+	}
 	delete gc;
 }
 
@@ -36,6 +42,11 @@ void ChessPanel::clearBuffer(wxGraphicsContext *gc)
 
 void ChessPanel::OnLeftMouseDown(wxMouseEvent& event)
 {
+	if (!enemySelected)
+	{
+		handleScreenSelection(event.GetPosition());
+		return;
+	}
 	auto pos = event.GetPosition();
 	const int cellLenX = GetClientSize().GetWidth() / 8;
 	const int cellLenY = GetClientSize().GetHeight() / 8;
@@ -47,9 +58,9 @@ void ChessPanel::OnLeftMouseDown(wxMouseEvent& event)
 	// Check if selectedCell is mover's piece
 	if (board->isThereAlly(cellX, cellY))
 	{
-		eraseAllIllumination();
+		board->eraseAllIllumination();
 		auto piece = selectedCell->getPiece();
-		_RPT1(0, "%s\n", piece->getId().c_str());
+		_RPT1(0, "Human selected %s\n", piece->getId().c_str());
 		piece->illuminatePaths(board);
 		board->setSelectedPiece(piece);
 		wxPanel::Refresh();
@@ -57,27 +68,22 @@ void ChessPanel::OnLeftMouseDown(wxMouseEvent& event)
 	else if (selectedCell->isIlluminated())
 	{
 		// Move there
-		_RPT1(0, "%s\n", "ciao");
 		board->getSelectedPiece()->move(cellX, cellY, board);
-		eraseAllIllumination();
+		board->eraseAllIllumination();
 		board->setSelectedPiece(nullptr);
+		board->switchTurn();
 		wxPanel::Refresh();
 	}
 	// Clicked on empty, non-illuminated cell
 	else
 	{
-		eraseAllIllumination();
+		board->eraseAllIllumination();
 		board->setSelectedPiece(nullptr);
 		wxPanel::Refresh();
 	}
 }
 
-void ChessPanel::eraseAllIllumination()
-{
-	for (int x = 0; x < 8; x++)
-		for (int y = 0; y < 8; y++)
-			board->getCellAt(x, y)->turnOff();
-}
+
 
 void ChessPanel::drawBoard(wxGraphicsContext* gc)
 {
@@ -126,4 +132,40 @@ void ChessPanel::drawPieces(wxGraphicsContext* gc)
 		
 	}
 	_RPT1(0, "%s\n", "Stop drawing pieces");
+}
+
+void ChessPanel::drawSelectionScreen(wxGraphicsContext* gc)
+{
+	const wxColor white = wxColor(255, 255, 255);
+	const wxColor black = wxColor(0, 0, 0);
+	wxPen blackPen(black, 10);
+	gc->SetPen(blackPen);
+	gc->DrawRectangle(160, 150, 300, 100);
+	gc->DrawRectangle(160, 350, 300, 100);
+	//gc->SetFont(wxFont(12, wxFONTFAMILY_DECORATIVE, wxNORMAL, wxNORMAL), black);
+	
+	wxFont f = *wxNORMAL_FONT;
+	f.SetPointSize(25);
+	gc->SetFont(f, black);
+	gc->DrawText(wxString("Select enemy:", 20), 200, 50);
+	gc->DrawText(wxString("Lazy AI", 20), 250, 170);
+	gc->DrawText(wxString("Another human", 20), 200, 370);
+}
+
+void ChessPanel::handleScreenSelection(const wxPoint& point)
+{
+	if (point.x >= 160 && point.x <= 460)
+	{
+		if (point.y >= 150 && point.y <= 250)
+		{
+			enemySelected = true;
+			board->setEnemyIsAI(true);
+		}
+		if (point.y >= 350 && point.y <= 450)
+		{
+			enemySelected = true;
+			board->setEnemyIsAI(false);
+		}
+	}
+	wxPanel::Refresh();
 }

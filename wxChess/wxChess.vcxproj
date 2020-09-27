@@ -127,8 +127,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ChessFrame.cpp" />
     <ClCompile Include="Piece.cpp" />
+    <ClCompile Include="AI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI.h" />
     <ClInclude Include="Board.fwd.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Cell.h" />
