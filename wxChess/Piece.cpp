@@ -73,8 +73,12 @@ bool Piece::canMove(Board* board)
 void Piece::move(int targetX, int targetY, Board* board)
 {
 	// We're sure that it's not an ally because it wouldn't be illuminated
-	if(board->isTherePiece(targetX, targetY))
+	if (board->isTherePiece(targetX, targetY))
+	{
 		board->getPieceAt(targetX, targetY)->setAlive(false);
+		if (board->getPieceAt(targetX, targetY)->getId().find("King") != std::string::npos)
+			board->setGameFinished(true);
+	}
 	board->getCellAt(cellX, cellY)->setPiece(nullptr);
 	cellX = targetX;
 	cellY = targetY;

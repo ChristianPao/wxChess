@@ -24,12 +24,15 @@ public:
 	void switchTurn();
 	void setEnemyIsAI(bool enemyIsAI);
 	void eraseAllIllumination();
+	void setGameFinished(bool gameFinished);
+	bool isGameFinished();
 
 private:
 	std::unordered_map<std::string, Piece*> pieces;
 	std::vector<std::vector<Cell*>> cells;
 	Piece* selectedPiece;
 	bool enemyIsAI;
+	bool gameFinished;
 	void initPieces();
 	void initCells();
 	

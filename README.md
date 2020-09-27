@@ -1,6 +1,10 @@
 # wxChess
-Simple chess game with wxWidgets.
+Chess game with wxWidgets.
 
-Almost fully functional. At the moment you can play vs another human with the same computer. I'd like to implement a lazy AI.
+You can play vs another human (same computer) or a pseudo-random AI.
 
 <img src="chess.png" width=400>
+
+
+
+<img src="menu.png" width=300>

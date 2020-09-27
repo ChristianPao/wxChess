@@ -1,9 +1,10 @@
 #include "Board.h"
 #include "Pieces.h"
 #include "AI.h"
+#include <wx/msgdlg.h>
 
 Board::Board()
-	:turn{ "white" }
+	:turn{ "white" }, gameFinished{ false }
 {
 	initPieces();
 	initCells();
@@ -42,11 +43,24 @@ std::string Board::getTurn()
 
 void Board::switchTurn()
 {
+	if (gameFinished)
+		return;
 	turn = turn == "white" ? "black" : "white";
 	if (turn == "black" && enemyIsAI)
 	{
 		AI::playTurn(this);
 	}
+}
+
+void Board::setGameFinished(bool gameFinished)
+{
+	this->gameFinished = gameFinished;
+	wxMessageBox(wxString("Game ended, " + turn + " wins."));
+}
+
+bool Board::isGameFinished()
+{
+	return gameFinished;
 }
 
 void Board::eraseAllIllumination()

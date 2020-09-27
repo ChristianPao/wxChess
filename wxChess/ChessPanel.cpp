@@ -42,6 +42,8 @@ void ChessPanel::clearBuffer(wxGraphicsContext *gc)
 
 void ChessPanel::OnLeftMouseDown(wxMouseEvent& event)
 {
+	if (board->isGameFinished())
+		return;
 	if (!enemySelected)
 	{
 		handleScreenSelection(event.GetPosition());
